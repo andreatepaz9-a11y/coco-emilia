@@ -22,6 +22,11 @@ import { getServerSideURL } from './utilities/getURL'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+// En tu computadora (npm run dev) se usa siempre el archivo local y public/media, aunque .env.local
+// tenga las claves de la nube. Turso y Blob solo se usan en el sitio publicado (producción) o si
+// pones USE_REMOTE_DATA=1 a propósito. Así editar en local nunca toca los datos reales.
+const useRemoteData = process.env.NODE_ENV === 'production' || process.env.USE_REMOTE_DATA === '1'
+
 export default buildConfig({
   admin: {
     components: {
@@ -76,8 +81,12 @@ export default buildConfig({
   db: sqliteAdapter({
     client: {
       // En local: archivo SQLite (DATABASE_URL). En Vercel: Turso, que define estas dos variables.
-      url: process.env.TURSO_DATABASE_URL || process.env.DATABASE_URL || '',
-      authToken: process.env.TURSO_AUTH_TOKEN || process.env.DATABASE_AUTH_TOKEN,
+      url: useRemoteData
+        ? process.env.TURSO_DATABASE_URL || process.env.DATABASE_URL || ''
+        : process.env.DATABASE_URL || '',
+      authToken: useRemoteData
+        ? process.env.TURSO_AUTH_TOKEN || process.env.DATABASE_AUTH_TOKEN
+        : undefined,
     },
   }),
   collections: [Pages, Posts, Products, Media, Categories, Users],
@@ -87,7 +96,7 @@ export default buildConfig({
     ...plugins,
     // En Vercel el disco es de solo lectura: las fotos se guardan en Vercel Blob.
     // Solo se activa si existe el token; en local siguen yendo a public/media.
-    ...(process.env.BLOB_READ_WRITE_TOKEN
+    ...(useRemoteData && process.env.BLOB_READ_WRITE_TOKEN
       ? [
           vercelBlobStorage({
             collections: { [Media.slug]: true },
