@@ -20,3 +20,12 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Base de datos local (tiene usuarios y datos): nunca va al repositorio
+*.db
+*.db-journal
+
+# Claves locales y archivos temporales
+.env*.local
+tsconfig.tsbuildinfo
+.playwright-mcp/

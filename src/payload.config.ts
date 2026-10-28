@@ -1,16 +1,20 @@
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import sharp from 'sharp'
 import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
+import { es } from '@payloadcms/translations/languages/es'
 
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
+import { Products } from './collections/Products'
 import { Users } from './collections/Users'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
+import { Instagram } from './Instagram/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
@@ -24,12 +28,20 @@ export default buildConfig({
       // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
       // Feel free to delete this at any time. Simply remove the line below.
       beforeLogin: ['@/components/BeforeLogin'],
+      graphics: {
+        Logo: '@/components/AdminBranding/Logo',
+        Icon: '@/components/AdminBranding/Icon',
+      },
       // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
       // Feel free to delete this at any time. Simply remove the line below.
       beforeDashboard: ['@/components/BeforeDashboard'],
     },
     importMap: {
       baseDir: path.resolve(dirname),
+    },
+    meta: {
+      titleSuffix: ' | Coco Emilia',
+      icons: [{ rel: 'icon', type: 'image/png', url: '/brand/logo.png' }],
     },
     user: Users.slug,
     livePreview: {
@@ -55,17 +67,35 @@ export default buildConfig({
       ],
     },
   },
+  i18n: {
+    fallbackLanguage: 'es',
+    supportedLanguages: { es },
+  },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
   db: sqliteAdapter({
     client: {
-      url: process.env.DATABASE_URL || '',
+      // En local: archivo SQLite (DATABASE_URL). En Vercel: Turso, que define estas dos variables.
+      url: process.env.TURSO_DATABASE_URL || process.env.DATABASE_URL || '',
+      authToken: process.env.TURSO_AUTH_TOKEN || process.env.DATABASE_AUTH_TOKEN,
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [Pages, Posts, Products, Media, Categories, Users],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer],
-  plugins,
+  globals: [Header, Footer, Instagram],
+  plugins: [
+    ...plugins,
+    // En Vercel el disco es de solo lectura: las fotos se guardan en Vercel Blob.
+    // Solo se activa si existe el token; en local siguen yendo a public/media.
+    ...(process.env.BLOB_READ_WRITE_TOKEN
+      ? [
+          vercelBlobStorage({
+            collections: { [Media.slug]: true },
+            token: process.env.BLOB_READ_WRITE_TOKEN,
+          }),
+        ]
+      : []),
+  ],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
   typescript: {

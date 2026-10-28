@@ -44,7 +44,8 @@
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 86rem;
   --font-mono: var(--font-geist-mono);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-jost);
+  --font-serif: var(--font-bodoni);
 }
 
 @layer utilities {
@@ -87,39 +88,47 @@
 }
 
 :root {
-  --background: oklch(100% 0 0deg);
-  --foreground: oklch(14.5% 0 0deg);
-  --card: oklch(96.5% 0.005 265deg);
-  --card-foreground: oklch(14.5% 0 0deg);
-  --popover: oklch(100% 0 0deg);
-  --popover-foreground: oklch(14.5% 0 0deg);
-  --primary: oklch(20.5% 0 0deg);
-  --primary-foreground: oklch(98.5% 0 0deg);
-  --secondary: oklch(97% 0 0deg);
-  --secondary-foreground: oklch(20.5% 0 0deg);
-  --muted: oklch(97% 0 0deg);
-  --muted-foreground: oklch(55.6% 0 0deg);
-  --accent: oklch(97% 0 0deg);
-  --accent-foreground: oklch(20.5% 0 0deg);
-  --destructive: oklch(57.7% 0.245 27.325deg);
-  --destructive-foreground: oklch(57.7% 0.245 27.325deg);
-  --border: oklch(92.2% 0 0deg);
-  --input: oklch(92.2% 0 0deg);
-  --ring: oklch(70.8% 0 0deg);
+  /* Marca Coco Emilia */
+  --rosa: #fadbda;
+  --oliva: #c8c784;
+  --verde: #3b3c22;
+  --blanco: #ffffff;
+  --crema: #fbf6f4;
+  --rosa-suave: #fdf1f0;
+
+  --background: var(--blanco);
+  --foreground: var(--verde);
+  --card: var(--crema);
+  --card-foreground: var(--verde);
+  --popover: var(--blanco);
+  --popover-foreground: var(--verde);
+  --primary: var(--verde);
+  --primary-foreground: var(--blanco);
+  --secondary: var(--rosa);
+  --secondary-foreground: var(--verde);
+  --muted: var(--crema);
+  --muted-foreground: #57583d;
+  --accent: var(--rosa);
+  --accent-foreground: var(--verde);
+  --destructive: #b3261e;
+  --destructive-foreground: var(--blanco);
+  --border: #ebe3dc;
+  --input: #8a8b66;
+  --ring: var(--verde);
   --chart-1: oklch(64.6% 0.222 41.116deg);
   --chart-2: oklch(60% 0.118 184.704deg);
   --chart-3: oklch(39.8% 0.07 227.392deg);
   --chart-4: oklch(82.8% 0.189 84.429deg);
   --chart-5: oklch(76.9% 0.188 70.08deg);
-  --radius: 0.625rem;
-  --sidebar: oklch(98.5% 0 0deg);
-  --sidebar-foreground: oklch(14.5% 0 0deg);
-  --sidebar-primary: oklch(20.5% 0 0deg);
-  --sidebar-primary-foreground: oklch(98.5% 0 0deg);
-  --sidebar-accent: oklch(97% 0 0deg);
-  --sidebar-accent-foreground: oklch(20.5% 0 0deg);
-  --sidebar-border: oklch(92.2% 0 0deg);
-  --sidebar-ring: oklch(70.8% 0 0deg);
+  --radius: 0.125rem;
+  --sidebar: var(--crema);
+  --sidebar-foreground: var(--verde);
+  --sidebar-primary: var(--verde);
+  --sidebar-primary-foreground: var(--blanco);
+  --sidebar-accent: var(--rosa);
+  --sidebar-accent-foreground: var(--verde);
+  --sidebar-border: #ebe3dc;
+  --sidebar-ring: var(--verde);
   --success: oklch(78% 0.08 200deg);
   --warning: oklch(89% 0.1 75deg);
   --error: oklch(75% 0.15 25deg);
@@ -203,6 +212,11 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
+  --color-rosa: var(--rosa);
+  --color-oliva: var(--oliva);
+  --color-verde: var(--verde);
+  --color-crema: var(--crema);
+  --color-rosa-suave: var(--rosa-suave);
 }
 
 @layer base {
@@ -211,6 +225,20 @@
   }
   body {
     @apply bg-background text-foreground min-h-[100vh] flex flex-col;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--verde);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

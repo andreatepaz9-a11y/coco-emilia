@@ -22,8 +22,13 @@ const nextConfig: NextConfig = {
       {
         pathname: '/api/media/file/**',
       },
+      {
+        pathname: '/brand/**',
+      },
     ],
-    qualities: [100],
+    // AVIF y WebP conservan más detalle que JPEG con menos peso
+    formats: ['image/avif', 'image/webp'],
+    qualities: [90, 100],
     remotePatterns: [
       ...[NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
         const url = new URL(item)

@@ -8,6 +8,11 @@ import React, { cache } from 'react'
 import { homeStatic } from '@/endpoints/seed/home-static'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
+import { AboutSection } from '@/components/Boutique/AboutSection'
+import { CategoryMosaic } from '@/components/Boutique/CategoryMosaic'
+import { HomeHero } from '@/components/Boutique/HomeHero'
+import { NewArrivals } from '@/components/Boutique/NewArrivals'
+import { InstagramSection } from '@/components/Boutique/InstagramSection'
 import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
@@ -65,6 +70,24 @@ export default async function Page({ params: paramsPromise }: Args) {
   }
 
   const { hero, layout } = page
+
+  // Inicio de la boutique: hero + mosaico de categorías (el contenido del CMS no se modifica)
+  if (decodedSlug === 'home') {
+    return (
+      <article>
+        <PageClient />
+        <PayloadRedirects disableNotFound url={url} />
+
+        {draft && <LivePreviewListener />}
+
+        <HomeHero />
+        <CategoryMosaic />
+        <NewArrivals />
+        <AboutSection />
+        <InstagramSection />
+      </article>
+    )
+  }
 
   return (
     <article className="pt-16 pb-24">

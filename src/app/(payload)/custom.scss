@@ -1,0 +1,60 @@
+/* Fuentes de marca para el panel de administración */
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&family=Jost:wght@400;500;600&display=swap');
+
+/*
+ * Identidad de Coco Emilia en /admin.
+ * Payload deriva toda su interfaz de la escala neutral --color-base-*, así que
+ * al redefinirla (blanco > rosa suave > oliva > verde oscuro) cambian a la vez
+ * fondos, bordes, textos y botones, tanto en modo claro como en oscuro.
+ * Los pasos 500 y superiores mantienen un contraste de 4.5:1 o más sobre blanco.
+ */
+:root {
+  --color-base-0: #ffffff;
+  --color-base-50: #fdf1f0;
+  --color-base-100: #f7e5e4;
+  --color-base-150: #f1d9d7;
+  --color-base-200: #e3d3bb;
+  --color-base-250: #d6cda0;
+  --color-base-300: #c8c784;
+  --color-base-350: #b4b376;
+  --color-base-400: #a09f69;
+  --color-base-450: #8b8b5c;
+  --color-base-500: #77774e;
+  --color-base-550: #6d6d47;
+  --color-base-600: #63633f;
+  --color-base-650: #595a38;
+  --color-base-700: #4f5031;
+  --color-base-750: #454629;
+  --color-base-800: #3b3c22;
+  --color-base-850: #31321c;
+  --color-base-900: #262716;
+  --color-base-950: #1c1c10;
+  --color-base-1000: #12120a;
+
+  --font-body: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Bodoni Moda', Georgia, serif;
+
+  --style-radius-s: 2px;
+  --style-radius-m: 2px;
+  --style-radius-l: 4px;
+}
+
+/* Títulos de las vistas en la tipografía de la tienda */
+html h1 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Bordes de campos con contraste suficiente (3:1) sobre el fondo */
+html input[type='text'],
+html input[type='email'],
+html input[type='password'],
+html input[type='number'],
+html input[type='search'],
+html input[type='url'],
+html input[type='date'],
+html textarea,
+html .rs__control {
+  border-color: var(--color-base-450);
+}

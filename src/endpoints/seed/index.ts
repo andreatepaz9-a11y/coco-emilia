@@ -20,7 +20,8 @@ const collections: CollectionSlug[] = [
   'search',
 ]
 
-const globals: GlobalSlug[] = ['header', 'footer']
+// Solo las secciones con menú: la de Instagram (fotos) no se toca al cargar datos de ejemplo
+const globals = ['header', 'footer'] as const satisfies readonly GlobalSlug[]
 
 const categories = ['Technology', 'News', 'Finance', 'Design', 'Software', 'Engineering']
 

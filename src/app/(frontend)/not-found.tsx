@@ -6,12 +6,10 @@ import { Button } from '@/components/ui/button'
 export default function NotFound() {
   return (
     <div className="container py-28">
-      <div className="prose max-w-none">
-        <h1 style={{ marginBottom: 0 }}>404</h1>
-        <p className="mb-4">This page could not be found.</p>
-      </div>
+      <h1 className="mb-4 font-serif text-6xl">404</h1>
+      <p className="mb-8 text-lg">No encontramos la página que buscas.</p>
       <Button asChild variant="default">
-        <Link href="/">Go home</Link>
+        <Link href="/">Volver al inicio</Link>
       </Button>
     </div>
   )

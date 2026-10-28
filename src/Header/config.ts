@@ -5,6 +5,8 @@ import { revalidateHeader } from './hooks/revalidateHeader'
 
 export const Header: GlobalConfig = {
   slug: 'header',
+  // La tienda usa un menú y un pie de página propios, así que se oculta del panel
+  admin: { hidden: true },
   access: {
     read: () => true,
   },

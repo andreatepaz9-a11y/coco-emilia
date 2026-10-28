@@ -5,6 +5,8 @@ import { revalidateFooter } from './hooks/revalidateFooter'
 
 export const Footer: GlobalConfig = {
   slug: 'footer',
+  // La tienda usa un menú y un pie de página propios, así que se oculta del panel
+  admin: { hidden: true },
   access: {
     read: () => true,
   },

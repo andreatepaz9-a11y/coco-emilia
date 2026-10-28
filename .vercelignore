@@ -1,0 +1,10 @@
+# Lo que NO se sube a Vercel al desplegar desde esta carpeta
+.claude
+skills-lock.json
+*.db
+*.db-journal
+.env
+.env*.local
+public/media
+tsconfig.tsbuildinfo
+.playwright-mcp
