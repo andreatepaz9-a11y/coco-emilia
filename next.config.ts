@@ -30,6 +30,8 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp'],
     qualities: [90, 100],
     remotePatterns: [
+      // Fotos subidas desde el panel cuando se guardan en Vercel Blob
+      { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
       ...[NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
         const url = new URL(item)
 
