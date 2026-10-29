@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
 import { slugField } from 'payload'
+import { revalidateCategory, revalidateCategoryDelete } from './revalidateCategory'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
@@ -18,6 +19,10 @@ export const Categories: CollectionConfig = {
     defaultColumns: ['title', 'group', 'order', 'slug'],
   },
   defaultSort: 'order',
+  hooks: {
+    afterChange: [revalidateCategory],
+    afterDelete: [revalidateCategoryDelete],
+  },
   fields: [
     {
       name: 'title',
