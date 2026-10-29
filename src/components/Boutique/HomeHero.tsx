@@ -33,7 +33,7 @@ export const HomeHero: React.FC = () => {
               priority
               quality={IMAGE_QUALITY}
               sizes="(min-width: 768px) 55vw, 100vw"
-              src="/brand/hero.png"
+              src="/brand/hero-2.png"
             />
           </div>
         </div>
