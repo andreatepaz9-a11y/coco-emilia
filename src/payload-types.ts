@@ -296,7 +296,6 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -797,7 +796,10 @@ export interface Product {
    * Ej.: Blusa asimétrica
    */
   title: string;
-  category: 'moda' | 'deportiva' | 'pijamas' | 'zapatos' | 'joyeria' | 'bolsos' | 'cabello';
+  /**
+   * Las categorías se crean y ordenan en la sección Categorías.
+   */
+  category: number | Category;
   /**
    * Una sola línea. Ej.: Anillo con diamante
    */
@@ -1311,7 +1313,6 @@ export interface ProductsSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;

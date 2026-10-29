@@ -6,7 +6,6 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import React, { cache } from 'react'
 
-import { getCategory } from '@/components/Boutique/categories'
 import { INSTAGRAM_URL } from '@/utilities/instagram'
 import {
   ColorGallery,
@@ -52,7 +51,7 @@ export default async function Page({ params: paramsPromise }: Args) {
   const product = await queryProduct(decodeURIComponent(slug))
   if (!product) notFound()
 
-  const category = getCategory(product.category)
+  const category = typeof product.category === 'object' ? product.category : null
   const photos: ProductPhoto[] = assignPhotoColors(
     (product.images ?? []).map((item) => ({ color: item.color, url: imageUrl(item.image) })),
     product.colors ?? [],
@@ -84,7 +83,7 @@ export default async function Page({ params: paramsPromise }: Args) {
               className="underline-offset-4 hover:underline"
               href={`/coleccion/${category.slug}`}
             >
-              {category.name}
+              {category.title}
             </Link>
             <span aria-hidden="true"> / </span>
           </>
@@ -100,7 +99,7 @@ export default async function Page({ params: paramsPromise }: Args) {
           {/* Información: se queda a la vista al desplazarse en escritorio */}
           <div className="md:sticky md:top-32 md:self-start">
             {category && (
-              <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em]">{category.name}</p>
+              <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em]">{category.title}</p>
             )}
             <h1 className="font-serif text-4xl leading-tight md:text-5xl">{product.title}</h1>
 

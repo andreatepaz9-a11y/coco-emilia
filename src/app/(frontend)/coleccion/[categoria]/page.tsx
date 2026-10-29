@@ -21,7 +21,7 @@ const getCategory = async (slug: string) => {
     pagination: false,
     where: { slug: { equals: slug } },
   })
-  return docs[0] ? { slug, name: docs[0].title } : null
+  return docs[0] ? { id: docs[0].id, name: docs[0].title } : null
 }
 
 export async function generateStaticParams() {
@@ -43,7 +43,7 @@ export default async function Page({ params: paramsPromise }: Args) {
     overrideAccess: false,
     pagination: false,
     sort: '-createdAt',
-    where: { category: { equals: category.slug } },
+    where: { category: { equals: category.id } },
   })
 
   return (

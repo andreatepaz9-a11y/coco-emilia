@@ -3,14 +3,16 @@ import Link from 'next/link'
 import React from 'react'
 
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '@/utilities/instagram'
-import { boutiqueCategories, categoryHref } from '@/components/Boutique/categories'
+import { categoryHref, getCategories } from '@/utilities/getCategories'
 import { Logo } from '@/components/Logo/Logo'
 import { whatsappUrl } from '@/utilities/whatsapp'
 
 const headingClass = 'mb-5 text-xs font-medium uppercase tracking-[0.18em] text-verde'
 const linkClass = 'inline-flex min-h-8 items-center text-sm underline-offset-4 hover:underline'
 
-export function Footer() {
+export async function Footer() {
+  const categories = await getCategories()
+
   return (
     <footer className="mt-auto bg-rosa text-verde">
       <div className="container grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:gap-8">
@@ -27,10 +29,10 @@ export function Footer() {
         <nav aria-label="Colecciones en el pie de página">
           <h2 className={headingClass}>Colecciones</h2>
           <ul>
-            {boutiqueCategories.map((category) => (
-              <li key={category.slug}>
+            {categories.map((category) => (
+              <li key={category.id}>
                 <Link className={linkClass} href={categoryHref(category)}>
-                  {category.name}
+                  {category.title}
                 </Link>
               </li>
             ))}

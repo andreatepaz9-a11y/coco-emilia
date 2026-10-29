@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { getPayload } from 'payload'
 import React from 'react'
 
-import { boutiqueCategories, categoryHref } from '@/components/Boutique/categories'
+import { categoryHref, getCategories } from '@/utilities/getCategories'
 import { ProductGrid } from '@/components/Boutique/ProductGrid'
 
 type Args = {
@@ -27,11 +27,12 @@ export default async function Page({ searchParams: searchParamsPromise }: Args) 
   const { q } = await searchParamsPromise
   const query = q?.trim() ?? ''
   const payload = await getPayload({ config: configPromise })
+  const categories = await getCategories()
 
   const matchingCategory = query
-    ? boutiqueCategories.find(
+    ? categories.find(
         (category) =>
-          normalize(category.name) === normalize(query) || category.slug === normalize(query),
+          normalize(category.title) === normalize(query) || category.slug === normalize(query),
       )
     : undefined
 
@@ -40,7 +41,7 @@ export default async function Page({ searchParams: searchParamsPromise }: Args) 
         or: [
           { title: { like: query } },
           { description: { like: query } },
-          ...(matchingCategory ? [{ category: { equals: matchingCategory.slug } }] : []),
+          ...(matchingCategory ? [{ category: { equals: matchingCategory.id } }] : []),
         ],
       }
     : {}
@@ -96,13 +97,13 @@ export default async function Page({ searchParams: searchParamsPromise }: Args) 
               : 'Aún no hay productos para mostrar. Explora las colecciones.'}
           </p>
           <ul className="mt-8 flex flex-wrap justify-center gap-3">
-            {boutiqueCategories.map((category) => (
-              <li key={category.slug}>
+            {categories.map((category) => (
+              <li key={category.id}>
                 <Link
                   className="inline-flex h-11 items-center border border-primary px-5 text-xs font-medium uppercase tracking-[0.12em] transition-colors duration-200 hover:bg-rosa"
                   href={categoryHref(category)}
                 >
-                  {category.name}
+                  {category.title}
                 </Link>
               </li>
             ))}

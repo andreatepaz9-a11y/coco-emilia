@@ -35,19 +35,12 @@ export const Products: CollectionConfig = {
     },
     {
       name: 'category',
-      type: 'select',
+      type: 'relationship',
       label: 'Categoría',
+      relationTo: 'categories',
       required: true,
       index: true,
-      options: [
-        { label: 'Moda', value: 'moda' },
-        { label: 'Deportiva', value: 'deportiva' },
-        { label: 'Pijamas', value: 'pijamas' },
-        { label: 'Zapatos', value: 'zapatos' },
-        { label: 'Joyería', value: 'joyeria' },
-        { label: 'Bolsos', value: 'bolsos' },
-        { label: 'Cabello', value: 'cabello' },
-      ],
+      admin: { description: 'Las categorías se crean y ordenan en la sección Categorías.' },
     },
     {
       name: 'description',

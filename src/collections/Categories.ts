@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
 import { slugField } from 'payload'
+import { categoryGroups } from './categoryGroups'
 import { revalidateCategory, revalidateCategoryDelete } from './revalidateCategory'
 
 export const Categories: CollectionConfig = {
@@ -42,10 +43,7 @@ export const Categories: CollectionConfig = {
       label: 'Grupo',
       defaultValue: 'ropa',
       index: true,
-      options: [
-        { label: 'Ropa y calzado', value: 'ropa' },
-        { label: 'Accesorios', value: 'accesorios' },
-      ],
+      options: categoryGroups.map(({ id, label }) => ({ label, value: id })),
     },
     {
       name: 'order',

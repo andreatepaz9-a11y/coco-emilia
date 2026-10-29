@@ -2,17 +2,17 @@ import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'paylo
 
 import { revalidatePath } from 'next/cache'
 
-// La página de inicio muestra los productos más recientes
+// Los productos salen en la home, en su colección y en la búsqueda: se refresca todo el sitio
 export const revalidateProduct: CollectionAfterChangeHook = ({ doc, req: { context } }) => {
   if (!context.disableRevalidate) {
-    revalidatePath('/')
+    revalidatePath('/', 'layout')
   }
   return doc
 }
 
 export const revalidateProductDelete: CollectionAfterDeleteHook = ({ doc, req: { context } }) => {
   if (!context.disableRevalidate) {
-    revalidatePath('/')
+    revalidatePath('/', 'layout')
   }
   return doc
 }

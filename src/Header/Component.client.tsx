@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '@/utilities/instagram'
-import { boutiqueCategories, categoryHref } from '@/components/Boutique/categories'
 import { Logo } from '@/components/Logo/Logo'
 import { whatsappUrl } from '@/utilities/whatsapp'
 
@@ -18,9 +17,7 @@ const isRosa = (color: string) => {
   return ROSA_RGB.every((value, i) => Math.abs(value - Number(match[i + 1])) <= 3)
 }
 
-// 7 colecciones: 4 a la izquierda del logo y 3 a la derecha
-const leftLinks = boutiqueCategories.slice(0, 4)
-const rightLinks = boutiqueCategories.slice(4)
+type NavCategory = { href: string; id: number; title: string }
 
 const navLinkClass =
   'relative py-2 text-xs font-medium uppercase tracking-[0.14em] after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:scale-x-0 after:bg-verde after:transition-transform after:duration-300 hover:after:scale-x-100 motion-reduce:after:transition-none'
@@ -28,7 +25,11 @@ const navLinkClass =
 const iconButtonClass =
   'flex size-11 items-center justify-center transition-colors duration-200 hover:bg-rosa'
 
-export const HeaderClient: React.FC = () => {
+export const HeaderClient: React.FC<{ categories: NavCategory[] }> = ({ categories }) => {
+  // Mitad de las colecciones a la izquierda del logo y el resto a la derecha
+  const half = Math.ceil(categories.length / 2)
+  const leftLinks = categories.slice(0, half)
+  const rightLinks = categories.slice(half)
   const [menuOpen, setMenuOpen] = useState(false)
   // 'blanco' cuando detrás hay una sección rosa; 'rosa' en cualquier otro caso
   const [tone, setTone] = useState<'blanco' | 'rosa'>('blanco')
@@ -124,8 +125,8 @@ export const HeaderClient: React.FC = () => {
             </button>
             <nav aria-label="Colecciones" className="hidden gap-6 lg:flex xl:gap-8">
               {leftLinks.map((category) => (
-                <Link className={navLinkClass} href={categoryHref(category)} key={category.slug}>
-                  {category.shortName ?? category.name}
+                <Link className={navLinkClass} href={category.href} key={category.id}>
+                  {category.title}
                 </Link>
               ))}
             </nav>
@@ -140,8 +141,8 @@ export const HeaderClient: React.FC = () => {
           <div className="flex items-center justify-end">
             <nav aria-label="Más colecciones" className="mr-4 hidden gap-6 lg:flex xl:gap-8">
               {rightLinks.map((category) => (
-                <Link className={navLinkClass} href={categoryHref(category)} key={category.slug}>
-                  {category.shortName ?? category.name}
+                <Link className={navLinkClass} href={category.href} key={category.id}>
+                  {category.title}
                 </Link>
               ))}
             </nav>
@@ -168,14 +169,14 @@ export const HeaderClient: React.FC = () => {
             id="menu-movil"
           >
             <ul className="container py-6">
-              {boutiqueCategories.map((category) => (
-                <li className="border-b border-border last:border-b-0" key={category.slug}>
+              {categories.map((category) => (
+                <li className="border-b border-border last:border-b-0" key={category.id}>
                   <Link
                     className="flex min-h-14 items-center justify-between font-serif text-2xl"
-                    href={categoryHref(category)}
+                    href={category.href}
                     onClick={() => setMenuOpen(false)}
                   >
-                    {category.name}
+                    {category.title}
                     <span aria-hidden="true" className="text-sm">
                       →
                     </span>

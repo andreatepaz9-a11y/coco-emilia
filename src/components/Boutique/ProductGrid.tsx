@@ -4,7 +4,6 @@ import type { Media, Product } from '@/payload-types'
 
 import { assignPhotoColors } from '@/utilities/colorSwatches'
 
-import { getCategory } from './categories'
 import { ProductCard } from './ProductCard'
 
 export const imageUrl = (image: number | Media | null | undefined) =>
@@ -31,7 +30,7 @@ export const ProductGrid: React.FC<{ products: Product[]; compact?: boolean }> =
             <ProductCard
               compact={compact}
               badge={product.badge ?? undefined}
-              category={getCategory(product.category)?.name ?? product.category}
+              category={typeof product.category === 'object' ? product.category.title : ''}
               colorImages={assignPhotoColors(
                 (product.images ?? []).map((item) => ({
                   color: item.color,

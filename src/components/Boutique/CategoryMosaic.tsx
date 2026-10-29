@@ -1,24 +1,15 @@
-import configPromise from '@payload-config'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getPayload } from 'payload'
 import React from 'react'
 
+import { categoryGroups } from '@/collections/categoryGroups'
+import { categoryHref, getCategories } from '@/utilities/getCategories'
 import { cn } from '@/utilities/ui'
 import { IMAGE_QUALITY } from '@/utilities/imageQuality'
 import { getMediaUrl } from '@/utilities/getMediaUrl'
 
-import { categoryGroups, categoryHref } from './categories'
-
 export const CategoryMosaic: React.FC = async () => {
-  const payload = await getPayload({ config: configPromise })
-  const { docs } = await payload.find({
-    collection: 'categories',
-    depth: 1,
-    limit: 100,
-    pagination: false,
-    sort: 'order',
-  })
+  const docs = await getCategories()
 
   return (
     <section aria-labelledby="categorias-titulo" className="py-16 md:py-28" id="categorias">
