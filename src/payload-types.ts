@@ -296,6 +296,7 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
+  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -400,6 +401,15 @@ export interface FolderInterface {
 export interface Category {
   id: number;
   title: string;
+  /**
+   * Sin imagen, la tarjeta muestra un bloque de color con el nombre.
+   */
+  image?: (number | null) | Media;
+  group?: ('ropa' | 'accesorios') | null;
+  /**
+   * Más bajo aparece primero dentro de su grupo.
+   */
+  order?: number | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -1301,6 +1311,7 @@ export interface ProductsSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
+  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1394,6 +1405,9 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
   title?: T;
+  image?: T;
+  group?: T;
+  order?: T;
   generateSlug?: T;
   slug?: T;
   parent?: T;

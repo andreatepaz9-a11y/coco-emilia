@@ -6,7 +6,6 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import React from 'react'
 
-import { boutiqueCategories, getCategory } from '@/components/Boutique/categories'
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '@/utilities/instagram'
 import { ProductGrid } from '@/components/Boutique/ProductGrid'
 
@@ -14,13 +13,26 @@ type Args = {
   params: Promise<{ categoria: string }>
 }
 
-export function generateStaticParams() {
-  return boutiqueCategories.map((category) => ({ categoria: category.slug }))
+const getCategory = async (slug: string) => {
+  const payload = await getPayload({ config: configPromise })
+  const { docs } = await payload.find({
+    collection: 'categories',
+    limit: 1,
+    pagination: false,
+    where: { slug: { equals: slug } },
+  })
+  return docs[0] ? { slug, name: docs[0].title } : null
+}
+
+export async function generateStaticParams() {
+  const payload = await getPayload({ config: configPromise })
+  const { docs } = await payload.find({ collection: 'categories', limit: 100, pagination: false })
+  return docs.flatMap((category) => (category.slug ? [{ categoria: category.slug }] : []))
 }
 
 export default async function Page({ params: paramsPromise }: Args) {
   const { categoria } = await paramsPromise
-  const category = getCategory(categoria)
+  const category = await getCategory(categoria)
   if (!category) notFound()
 
   const payload = await getPayload({ config: configPromise })
@@ -72,6 +84,6 @@ export default async function Page({ params: paramsPromise }: Args) {
 
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { categoria } = await paramsPromise
-  const category = getCategory(categoria)
+  const category = await getCategory(categoria)
   return { title: category ? `${category.name} | Coco Emilia` : 'Colección | Coco Emilia' }
 }
