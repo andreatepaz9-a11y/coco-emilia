@@ -7,17 +7,20 @@ import { categoryHref, getCategories } from '@/utilities/getCategories'
 import { cn } from '@/utilities/ui'
 import { IMAGE_QUALITY } from '@/utilities/imageQuality'
 import { getMediaUrl } from '@/utilities/getMediaUrl'
+import { getInicio } from '@/utilities/getInicio'
 
 export const CategoryMosaic: React.FC = async () => {
-  const docs = await getCategories()
+  const [docs, { colecciones }] = await Promise.all([getCategories(), getInicio()])
 
   return (
-    <section aria-labelledby="categorias-titulo" className="py-16 md:py-28" id="categorias">
+    <section aria-labelledby="categorias-titulo" className="scroll-mt-20 py-16 md:py-28" id="categorias">
       <div className="container">
         <div className="mb-12 text-center md:mb-16">
-          <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em]">Explora</p>
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em]">
+            {colecciones.etiqueta}
+          </p>
           <h2 className="font-serif text-4xl md:text-5xl" id="categorias-titulo">
-            Nuestras <em className="italic">colecciones</em>
+            {colecciones.titulo} <em className="italic">{colecciones.tituloCursiva}</em>
           </h2>
         </div>
 

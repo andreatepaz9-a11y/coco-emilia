@@ -114,11 +114,13 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    inicio: Inicio;
     instagram: Instagram;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    inicio: InicioSelect<false> | InicioSelect<true>;
     instagram: InstagramSelect<false> | InstagramSelect<true>;
   };
   locale: null;
@@ -156,14 +158,29 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * La página "Home" controla la portada del inicio (foto, texto y botón). Los demás textos del inicio se editan en Globales → Inicio e Instagram.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
 export interface Page {
   id: number;
+  /**
+   * En la página "Home" solo cuenta la pestaña Hero: es la portada del inicio.
+   */
   title: string;
-  hero: {
-    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
+  hero?: {
+    /**
+     * Define el diseño de la portada de esta página.
+     */
+    type?: ('none' | 'highImpact' | 'mediumImpact' | 'lowImpact') | null;
+    etiqueta?: string | null;
+    titulo?: string | null;
+    /**
+     * Sale después del título, en letra cursiva.
+     */
+    tituloCursiva?: string | null;
+    texto?: string | null;
     richText?: {
       root: {
         type: string;
@@ -179,6 +196,9 @@ export interface Page {
       };
       [k: string]: unknown;
     } | null;
+    /**
+     * Pulsa "Añadir Botón" y escribe el nombre en Label y a dónde lleva en Internal link o Custom URL. El estilo del botón no se cambia desde aquí.
+     */
     links?:
       | {
           link: {
@@ -203,9 +223,10 @@ export interface Page {
           id?: string | null;
         }[]
       | null;
+    colorBoton?: ('verde' | 'rosa' | 'borde') | null;
     media?: (number | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout?: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[] | null;
   meta?: {
     title?: string | null;
     /**
@@ -1125,6 +1146,10 @@ export interface PagesSelect<T extends boolean = true> {
     | T
     | {
         type?: T;
+        etiqueta?: T;
+        titulo?: T;
+        tituloCursiva?: T;
+        texto?: T;
         richText?: T;
         links?:
           | T
@@ -1141,6 +1166,7 @@ export interface PagesSelect<T extends boolean = true> {
                   };
               id?: T;
             };
+        colorBoton?: T;
         media?: T;
       };
   layout?:
@@ -1781,13 +1807,85 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
- * Fotos de la sección "Síguenos en Instagram" del inicio. Si no agregas ninguna, se muestran las fotos de las colecciones.
+ * Textos de la página de inicio. La portada (foto, texto y botón) se edita en Páginas → Home, las tarjetas en Categorías y la sección de Instagram en Instagram.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inicio".
+ */
+export interface Inicio {
+  id: number;
+  /**
+   * Arrastra para cambiar el orden en que se ven en el inicio (la portada siempre va primero). Si quitas una, no se muestra; para volver a ponerla usa "Añadir Sección".
+   */
+  orden?:
+    | {
+        seccion: 'colecciones' | 'novedades' | 'historia' | 'instagram';
+        id?: string | null;
+      }[]
+    | null;
+  colecciones?: {
+    etiqueta?: string | null;
+    titulo?: string | null;
+    /**
+     * Se escribe después del título, en letra cursiva.
+     */
+    tituloCursiva?: string | null;
+  };
+  novedades?: {
+    mostrar?: boolean | null;
+    etiqueta?: string | null;
+    titulo?: string | null;
+    /**
+     * Se escribe después del título, en letra cursiva.
+     */
+    tituloCursiva?: string | null;
+    modo?: ('ultimos' | 'manual') | null;
+    /**
+     * Se muestran los últimos productos que subas.
+     */
+    cantidad?: number | null;
+    /**
+     * Salen en el mismo orden en que los pongas (arrastra para cambiarlo).
+     */
+    productos?: (number | Product)[] | null;
+  };
+  historia?: {
+    mostrar?: boolean | null;
+    etiqueta?: string | null;
+    titulo?: string | null;
+    /**
+     * Se escribe después del título, en letra cursiva.
+     */
+    tituloCursiva?: string | null;
+    texto?: string | null;
+    botonTexto?: string | null;
+    /**
+     * Si lo dejas vacío abre el WhatsApp de la tienda.
+     */
+    botonEnlace?: string | null;
+    colorBoton?: ('verde' | 'rosa' | 'borde') | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Sección "Síguenos en Instagram" del inicio: textos, botón y fotos. Si no agregas fotos, se muestran las de las colecciones.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "instagram".
  */
 export interface Instagram {
   id: number;
+  etiqueta?: string | null;
+  titulo?: string | null;
+  tituloCursiva?: string | null;
+  texto?: string | null;
+  botonTexto?: string | null;
+  /**
+   * Si lo dejas vacío abre el perfil de Instagram de la tienda.
+   */
+  botonEnlace?: string | null;
+  colorBoton?: ('verde' | 'rosa' | 'borde') | null;
   /**
    * Hasta 6 fotos. Se muestran en este orden. Con 3 o menos se ven más grandes.
    */
@@ -1852,9 +1950,61 @@ export interface FooterSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inicio_select".
+ */
+export interface InicioSelect<T extends boolean = true> {
+  orden?:
+    | T
+    | {
+        seccion?: T;
+        id?: T;
+      };
+  colecciones?:
+    | T
+    | {
+        etiqueta?: T;
+        titulo?: T;
+        tituloCursiva?: T;
+      };
+  novedades?:
+    | T
+    | {
+        mostrar?: T;
+        etiqueta?: T;
+        titulo?: T;
+        tituloCursiva?: T;
+        modo?: T;
+        cantidad?: T;
+        productos?: T;
+      };
+  historia?:
+    | T
+    | {
+        mostrar?: T;
+        etiqueta?: T;
+        titulo?: T;
+        tituloCursiva?: T;
+        texto?: T;
+        botonTexto?: T;
+        botonEnlace?: T;
+        colorBoton?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "instagram_select".
  */
 export interface InstagramSelect<T extends boolean = true> {
+  etiqueta?: T;
+  titulo?: T;
+  tituloCursiva?: T;
+  texto?: T;
+  botonTexto?: T;
+  botonEnlace?: T;
+  colorBoton?: T;
   photos?:
     | T
     | {

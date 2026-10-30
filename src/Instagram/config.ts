@@ -1,5 +1,7 @@
+import { colorBotonField } from '@/utilities/estiloBoton'
 import type { GlobalConfig } from 'payload'
 
+import { instagramDefaults as d } from '../Inicio/defaults'
 import { revalidateInstagram } from './hooks/revalidateInstagram'
 
 export const Instagram: GlobalConfig = {
@@ -10,12 +12,63 @@ export const Instagram: GlobalConfig = {
   },
   admin: {
     description:
-      'Fotos de la sección "Síguenos en Instagram" del inicio. Si no agregas ninguna, se muestran las fotos de las colecciones.',
+      'Sección "Síguenos en Instagram" del inicio: textos, botón y fotos. Si no agregas fotos, se muestran las de las colecciones.',
   },
   hooks: {
     afterChange: [revalidateInstagram],
   },
   fields: [
+    {
+      name: 'etiqueta',
+      type: 'text',
+      label: 'Texto pequeño sobre el título',
+      defaultValue: d.etiqueta,
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'titulo',
+          type: 'text',
+          label: 'Título',
+          defaultValue: d.titulo,
+          admin: { width: '50%' },
+        },
+        {
+          name: 'tituloCursiva',
+          type: 'text',
+          label: 'Parte en cursiva del título',
+          defaultValue: d.tituloCursiva,
+          admin: { width: '50%' },
+        },
+      ],
+    },
+    {
+      name: 'texto',
+      type: 'text',
+      label: 'Texto (después sale @tu_usuario)',
+      defaultValue: d.texto,
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'botonTexto',
+          type: 'text',
+          label: 'Texto del botón',
+          defaultValue: d.botonTexto,
+          admin: { width: '50%' },
+        },
+        {
+          name: 'botonEnlace',
+          type: 'text',
+          label: 'Enlace del botón',
+          defaultValue: d.botonEnlace,
+          admin: { width: '50%', description: 'Si lo dejas vacío abre el perfil de Instagram de la tienda.' },
+        },
+      ],
+    },
+    colorBotonField('verde'),
     {
       name: 'photos',
       type: 'array',

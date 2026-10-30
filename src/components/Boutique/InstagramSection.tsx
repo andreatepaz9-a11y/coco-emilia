@@ -4,6 +4,8 @@ import Image from 'next/image'
 import { getPayload } from 'payload'
 import React from 'react'
 
+import { instagramDefaults as d } from '@/Inicio/defaults'
+import { estiloBoton } from '@/utilities/estiloBoton'
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '@/utilities/instagram'
 import { IMAGE_QUALITY } from '@/utilities/imageQuality'
 
@@ -19,10 +21,7 @@ const fallbackTiles: Tile[] = [
   { src: '/brand/cabello.jpg', alt: 'Accesorios para el cabello de Coco Emilia' },
 ].map((tile) => ({ ...tile, href: INSTAGRAM_URL }))
 
-const getTiles = async (): Promise<Tile[]> => {
-  const payload = await getPayload({ config: configPromise })
-  const instagram = await payload.findGlobal({ slug: 'instagram', depth: 1 })
-
+const getTiles = (instagram: Awaited<ReturnType<typeof getInstagram>>): Tile[] => {
   const tiles = (instagram.photos ?? []).flatMap((item): Tile[] => {
     const media = item.image
     if (!media || typeof media !== 'object' || !media.url) return []
@@ -43,8 +42,18 @@ const getTiles = async (): Promise<Tile[]> => {
   return tiles.length > 0 ? tiles : fallbackTiles
 }
 
+const getInstagram = async () => {
+  const payload = await getPayload({ config: configPromise })
+  return payload.findGlobal({ slug: 'instagram', depth: 1 })
+}
+
+const text = (value: string | null | undefined, fallback: string) =>
+  typeof value === 'string' ? value : fallback
+
 export const InstagramSection: React.FC = async () => {
-  const tiles = await getTiles()
+  const instagram = await getInstagram()
+  const tiles = getTiles(instagram)
+  const botonHref = instagram.botonEnlace?.trim() || INSTAGRAM_URL
   const count = tiles.length
 
   // Cuántas caben por fila: con pocas fotos se ven más grandes, hasta 3 en tablet y 6 en escritorio
@@ -54,15 +63,22 @@ export const InstagramSection: React.FC = async () => {
   } as React.CSSProperties
 
   return (
-    <section aria-labelledby="instagram-titulo" className="py-20 md:py-28">
+    <section
+      aria-labelledby="instagram-titulo"
+      className="scroll-mt-20 py-20 md:py-28"
+      id="instagram"
+    >
       <div className="container">
         <div className="mb-10 text-center md:mb-14">
-          <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em]">Instagram</p>
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em]">
+            {text(instagram.etiqueta, d.etiqueta)}
+          </p>
           <h2 className="font-serif text-4xl md:text-5xl" id="instagram-titulo">
-            Síguenos en <em className="italic">Instagram</em>
+            {text(instagram.titulo, d.titulo)}{' '}
+            <em className="italic">{text(instagram.tituloCursiva, d.tituloCursiva)}</em>
           </h2>
           <p className="mt-4 text-base md:text-lg">
-            Novedades, looks y lo que pasa detrás de cámaras en{' '}
+            {text(instagram.texto, d.texto)}{' '}
             <a
               className="font-medium underline underline-offset-4 hover:no-underline"
               href={INSTAGRAM_URL}
@@ -109,13 +125,13 @@ export const InstagramSection: React.FC = async () => {
 
         <div className="mt-10 text-center">
           <a
-            className="inline-flex h-12 items-center gap-2 bg-primary px-8 text-xs font-medium uppercase tracking-[0.12em] text-primary-foreground transition-colors duration-200 hover:bg-primary/90"
-            href={INSTAGRAM_URL}
+            className={`gap-2 ${estiloBoton(instagram.colorBoton, 'verde')}`}
+            href={botonHref}
             rel="noopener noreferrer"
             target="_blank"
           >
             <InstagramIcon aria-hidden="true" className="size-4" />
-            Seguir en Instagram
+            {text(instagram.botonTexto, d.botonTexto)}
             <span className="sr-only">(se abre en una pestaña nueva)</span>
           </a>
         </div>

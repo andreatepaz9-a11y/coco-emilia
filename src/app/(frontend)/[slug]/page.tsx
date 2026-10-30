@@ -1,3 +1,4 @@
+import { Revelar } from '@/components/Boutique/Revelar'
 import type { Metadata } from 'next'
 
 import { PayloadRedirects } from '@/components/PayloadRedirects'
@@ -13,6 +14,7 @@ import { CategoryMosaic } from '@/components/Boutique/CategoryMosaic'
 import { HomeHero } from '@/components/Boutique/HomeHero'
 import { NewArrivals } from '@/components/Boutique/NewArrivals'
 import { InstagramSection } from '@/components/Boutique/InstagramSection'
+import { getInicio } from '@/utilities/getInicio'
 import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
@@ -73,6 +75,14 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   // Inicio de la boutique: hero + mosaico de categorías (el contenido del CMS no se modifica)
   if (decodedSlug === 'home') {
+    const { orden } = await getInicio()
+    const secciones = {
+      colecciones: <CategoryMosaic />,
+      novedades: <NewArrivals />,
+      historia: <AboutSection />,
+      instagram: <InstagramSection />,
+    }
+
     return (
       <article>
         <PageClient />
@@ -80,11 +90,13 @@ export default async function Page({ params: paramsPromise }: Args) {
 
         {draft && <LivePreviewListener />}
 
-        <HomeHero />
-        <CategoryMosaic />
-        <NewArrivals />
-        <AboutSection />
-        <InstagramSection />
+        <HomeHero hero={hero} />
+        <noscript>
+          <style>{'.revelar{opacity:1;transform:none}'}</style>
+        </noscript>
+        {orden.map((id) => (
+          <Revelar key={id}>{secciones[id]}</Revelar>
+        ))}
       </article>
     )
   }
@@ -98,7 +110,7 @@ export default async function Page({ params: paramsPromise }: Args) {
       {draft && <LivePreviewListener />}
 
       <RenderHero {...hero} />
-      <RenderBlocks blocks={layout} />
+      <RenderBlocks blocks={layout ?? []} />
     </article>
   )
 }

@@ -38,6 +38,8 @@ export const Pages: CollectionConfig<'pages'> = {
     slug: true,
   },
   admin: {
+    description:
+      'La página "Home" controla la portada del inicio (foto, texto y botón). Los demás textos del inicio se editan en Globales → Inicio e Instagram.',
     defaultColumns: ['title', 'slug', 'updatedAt'],
     livePreview: {
       url: ({ data, req }) =>
@@ -60,6 +62,10 @@ export const Pages: CollectionConfig<'pages'> = {
       name: 'title',
       type: 'text',
       required: true,
+      admin: {
+        description:
+          'En la página "Home" solo cuenta la pestaña Hero: es la portada del inicio.',
+      },
     },
     {
       type: 'tabs',
@@ -77,10 +83,12 @@ export const Pages: CollectionConfig<'pages'> = {
               required: true,
               admin: {
                 initCollapsed: true,
+                condition: (data) => data?.slug !== 'home',
               },
             },
           ],
           label: 'Content',
+          admin: { condition: (data) => data?.slug !== 'home' },
         },
         {
           name: 'meta',
