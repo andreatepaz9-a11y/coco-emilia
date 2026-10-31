@@ -3,23 +3,29 @@ import { getPayload } from 'payload'
 import { cache } from 'react'
 
 import { inicioDefaults } from '@/Inicio/defaults'
-import { ordenPorDefecto, secciones, type SeccionId } from '@/Inicio/secciones'
+import type { Inicio } from '@/payload-types'
 
 const text = (value: string | null | undefined, fallback: string) =>
   typeof value === 'string' ? value : fallback
+
+export type SeccionInicio = NonNullable<Inicio['secciones']>[number]
 
 export const getInicio = cache(async () => {
   const payload = await getPayload({ config: configPromise })
   const doc = await payload.findGlobal({ slug: 'inicio', depth: 1 })
   const d = inicioDefaults
 
-  const validas = new Set<string>(secciones.map(({ id }) => id))
-  const orden = (doc.orden ?? [])
-    .map(({ seccion }) => seccion)
-    .filter((id): id is SeccionId => !!id && validas.has(id))
+  const lista = (doc.secciones ?? []).filter((s) => !!s.blockType)
+  const orden: SeccionInicio[] =
+    lista.length > 0
+      ? lista
+      : (['colecciones', 'novedades', 'historia', 'instagram'] as const).map((blockType) => ({
+          blockType,
+          id: blockType,
+        }))
 
   return {
-    orden: orden.length > 0 ? Array.from(new Set(orden)) : ordenPorDefecto,
+    orden,
     colecciones: {
       etiqueta: text(doc.colecciones?.etiqueta, d.colecciones.etiqueta),
       titulo: text(doc.colecciones?.titulo, d.colecciones.titulo),

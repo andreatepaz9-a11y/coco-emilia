@@ -1,3 +1,4 @@
+import { SeccionTexto } from '@/components/Boutique/SeccionTexto'
 import { Revelar } from '@/components/Boutique/Revelar'
 import type { Metadata } from 'next'
 
@@ -76,7 +77,7 @@ export default async function Page({ params: paramsPromise }: Args) {
   // Inicio de la boutique: hero + mosaico de categorías (el contenido del CMS no se modifica)
   if (decodedSlug === 'home') {
     const { orden } = await getInicio()
-    const secciones = {
+    const fijas = {
       colecciones: <CategoryMosaic />,
       novedades: <NewArrivals />,
       historia: <AboutSection />,
@@ -94,8 +95,14 @@ export default async function Page({ params: paramsPromise }: Args) {
         <noscript>
           <style>{'.revelar{opacity:1;transform:none}'}</style>
         </noscript>
-        {orden.map((id) => (
-          <Revelar key={id}>{secciones[id]}</Revelar>
+        {orden.map((seccion) => (
+          <Revelar key={seccion.id}>
+            {seccion.blockType === 'seccionTexto' ? (
+              <SeccionTexto datos={seccion} />
+            ) : (
+              fijas[seccion.blockType]
+            )}
+          </Revelar>
         ))}
       </article>
     )

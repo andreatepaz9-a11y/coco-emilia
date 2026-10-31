@@ -25,7 +25,10 @@ const navLinkClass =
 const iconButtonClass =
   'flex size-11 items-center justify-center transition-colors duration-200 hover:bg-rosa'
 
-export const HeaderClient: React.FC<{ categories: NavCategory[] }> = ({ categories }) => {
+export const HeaderClient: React.FC<{
+  categories: NavCategory[]
+  paginas: { href: string; id: number; title: string }[]
+}> = ({ categories, paginas }) => {
   // Mitad de las colecciones a la izquierda del logo y el resto a la derecha
   const half = Math.ceil(categories.length / 2)
   const leftLinks = categories.slice(0, half)
@@ -180,6 +183,17 @@ export const HeaderClient: React.FC<{ categories: NavCategory[] }> = ({ categori
                     <span aria-hidden="true" className="text-sm">
                       →
                     </span>
+                  </Link>
+                </li>
+              ))}
+              {paginas.map((pagina) => (
+                <li className="border-b border-border" key={pagina.id}>
+                  <Link
+                    className="flex min-h-12 items-center text-xs font-medium uppercase tracking-[0.14em]"
+                    href={pagina.href}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {pagina.title}
                   </Link>
                 </li>
               ))}

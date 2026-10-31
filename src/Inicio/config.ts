@@ -1,10 +1,11 @@
-import type { Field, GlobalConfig } from 'payload'
+import type { Block, Field, GlobalConfig } from 'payload'
 
 import { colorBotonField } from '@/utilities/estiloBoton'
 
 import { inicioDefaults as d } from './defaults'
 import { revalidateInicio } from './hooks/revalidateInicio'
-import { ordenPorDefecto, secciones } from './secciones'
+import { SeccionTexto } from './SeccionTexto'
+import { ordenPorDefecto, seccionesFijas } from './secciones'
 
 const titulo = (defaults: { titulo: string; tituloCursiva: string }): Field[] => [
   {
@@ -41,31 +42,37 @@ export const Inicio: GlobalConfig = {
   access: { read: () => true },
   admin: {
     description:
-      'Textos de la página de inicio. La portada (foto, texto y botón) se edita en Páginas → Home, las tarjetas en Categorías y la sección de Instagram en Instagram.',
+      'Secciones de la página de inicio. La portada (foto, texto y botón) se edita en Páginas → Home, las tarjetas en Categorías y la sección de Instagram en Instagram.',
   },
   hooks: { afterChange: [revalidateInicio] },
   fields: [
     {
-      name: 'orden',
-      type: 'array',
-      label: 'Orden de las secciones',
+      name: 'secciones',
+      type: 'blocks',
+      label: 'Secciones del inicio',
       labels: { singular: 'Sección', plural: 'Secciones' },
       minRows: 1,
-      maxRows: secciones.length,
-      defaultValue: ordenPorDefecto.map((seccion) => ({ seccion })),
+      defaultValue: ordenPorDefecto.map((blockType) => ({ blockType })),
       admin: {
+        initCollapsed: true,
         description:
-          'Arrastra para cambiar el orden en que se ven en el inicio (la portada siempre va primero). Si quitas una, no se muestra; para volver a ponerla usa "Añadir Sección".',
-        components: { RowLabel: '@/Inicio/RowLabel#RowLabel' },
+          'Arrastra para cambiar el orden (la portada siempre va primero). Pulsa "Añadir Sección" para agregar una nueva. Las secciones fijas (Colecciones, Novedades, Historia, Instagram) se editan en las pestañas de abajo; "Texto con foto" se puede añadir las veces que quieras y se edita aquí mismo.',
       },
-      fields: [
-        {
-          name: 'seccion',
-          type: 'select',
-          label: 'Sección',
-          required: true,
-          options: secciones.map(({ id, label }) => ({ label, value: id })),
-        },
+      blocks: [
+        ...seccionesFijas.map(
+          ({ id, label }): Block => ({
+            slug: id,
+            labels: { singular: label, plural: label },
+            fields: [
+              {
+                name: 'nota',
+                type: 'ui',
+                admin: { components: { Field: '@/Inicio/NotaSeccionFija#NotaSeccionFija' } },
+              },
+            ],
+          }),
+        ),
+        SeccionTexto,
       ],
     },
     {

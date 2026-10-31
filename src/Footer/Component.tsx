@@ -4,6 +4,7 @@ import React from 'react'
 
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '@/utilities/instagram'
 import { categoryHref, getCategories } from '@/utilities/getCategories'
+import { getPaginasMenu } from '@/utilities/getPaginasMenu'
 import { Logo } from '@/components/Logo/Logo'
 import { whatsappUrl } from '@/utilities/whatsapp'
 
@@ -11,7 +12,7 @@ const headingClass = 'mb-5 text-xs font-medium uppercase tracking-[0.18em] text-
 const linkClass = 'inline-flex min-h-8 items-center text-sm underline-offset-4 hover:underline'
 
 export async function Footer() {
-  const categories = await getCategories()
+  const [categories, paginas] = await Promise.all([getCategories(), getPaginasMenu()])
 
   return (
     <footer className="mt-auto bg-rosa text-verde">
@@ -42,6 +43,13 @@ export async function Footer() {
         <nav aria-label="Ayuda">
           <h2 className={headingClass}>Ayuda</h2>
           <ul>
+            {paginas.map((pagina) => (
+              <li key={pagina.id}>
+                <Link className={linkClass} href={pagina.href}>
+                  {pagina.title}
+                </Link>
+              </li>
+            ))}
             <li>
               <a
                 className={linkClass}

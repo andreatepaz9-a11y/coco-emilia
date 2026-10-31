@@ -158,16 +158,13 @@ export interface UserAuthOperations {
   };
 }
 /**
- * La página "Home" controla la portada del inicio (foto, texto y botón). Los demás textos del inicio se editan en Globales → Inicio e Instagram.
+ * Páginas de la tienda. Solo la página llamada "Home" es el inicio: su pestaña Hero es la portada y el resto se edita en Globales → Inicio e Instagram. Las demás páginas se arman en la pestaña Content.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
 export interface Page {
   id: number;
-  /**
-   * En la página "Home" solo cuenta la pestaña Hero: es la portada del inicio.
-   */
   title: string;
   hero?: {
     /**
@@ -236,6 +233,14 @@ export interface Page {
     description?: string | null;
   };
   publishedAt?: string | null;
+  /**
+   * Agrega un enlace a esta página en el pie de página y en el menú del celular.
+   */
+  mostrarEnMenu?: boolean | null;
+  /**
+   * Opcional. Si lo dejas vacío usa el título de la página.
+   */
+  etiquetaMenu?: string | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -1186,6 +1191,8 @@ export interface PagesSelect<T extends boolean = true> {
         description?: T;
       };
   publishedAt?: T;
+  mostrarEnMenu?: T;
+  etiquetaMenu?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;
@@ -1807,7 +1814,7 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
- * Textos de la página de inicio. La portada (foto, texto y botón) se edita en Páginas → Home, las tarjetas en Categorías y la sección de Instagram en Instagram.
+ * Secciones de la página de inicio. La portada (foto, texto y botón) se edita en Páginas → Home, las tarjetas en Categorías y la sección de Instagram en Instagram.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "inicio".
@@ -1815,13 +1822,49 @@ export interface Footer {
 export interface Inicio {
   id: number;
   /**
-   * Arrastra para cambiar el orden en que se ven en el inicio (la portada siempre va primero). Si quitas una, no se muestra; para volver a ponerla usa "Añadir Sección".
+   * Arrastra para cambiar el orden (la portada siempre va primero). Pulsa "Añadir Sección" para agregar una nueva. Las secciones fijas (Colecciones, Novedades, Historia, Instagram) se editan en las pestañas de abajo; "Texto con foto" se puede añadir las veces que quieras y se edita aquí mismo.
    */
-  orden?:
-    | {
-        seccion: 'colecciones' | 'novedades' | 'historia' | 'instagram';
-        id?: string | null;
-      }[]
+  secciones?:
+    | (
+        | {
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'colecciones';
+          }
+        | {
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'novedades';
+          }
+        | {
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'historia';
+          }
+        | {
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'instagram';
+          }
+        | {
+            etiqueta?: string | null;
+            titulo?: string | null;
+            tituloCursiva?: string | null;
+            texto?: string | null;
+            imagen?: (number | null) | Media;
+            posicionFoto?: ('derecha' | 'izquierda') | null;
+            fondo?: ('rosa' | 'crema' | 'blanco') | null;
+            /**
+             * Déjalo vacío para no mostrar botón.
+             */
+            botonTexto?: string | null;
+            botonEnlace?: string | null;
+            colorBoton?: ('verde' | 'rosa' | 'borde') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'seccionTexto';
+          }
+      )[]
     | null;
   colecciones?: {
     etiqueta?: string | null;
@@ -1953,11 +1996,49 @@ export interface FooterSelect<T extends boolean = true> {
  * via the `definition` "inicio_select".
  */
 export interface InicioSelect<T extends boolean = true> {
-  orden?:
+  secciones?:
     | T
     | {
-        seccion?: T;
-        id?: T;
+        colecciones?:
+          | T
+          | {
+              id?: T;
+              blockName?: T;
+            };
+        novedades?:
+          | T
+          | {
+              id?: T;
+              blockName?: T;
+            };
+        historia?:
+          | T
+          | {
+              id?: T;
+              blockName?: T;
+            };
+        instagram?:
+          | T
+          | {
+              id?: T;
+              blockName?: T;
+            };
+        seccionTexto?:
+          | T
+          | {
+              etiqueta?: T;
+              titulo?: T;
+              tituloCursiva?: T;
+              texto?: T;
+              imagen?: T;
+              posicionFoto?: T;
+              fondo?: T;
+              botonTexto?: T;
+              botonEnlace?: T;
+              colorBoton?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   colecciones?:
     | T

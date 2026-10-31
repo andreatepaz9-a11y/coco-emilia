@@ -33,6 +33,15 @@ export const inicioDefaults = {
   },
 }
 
+export const seccionTextoDefaults = {
+  etiqueta: 'Nueva temporada',
+  titulo: 'Piezas para',
+  tituloCursiva: 'estrenar',
+  texto: 'Cuéntale a tus clientas qué hay de nuevo, una promoción o una colección especial.',
+  botonTexto: 'Ver más',
+  botonEnlace: '#novedades',
+}
+
 export const instagramDefaults = {
   etiqueta: 'Instagram',
   titulo: 'Síguenos en',

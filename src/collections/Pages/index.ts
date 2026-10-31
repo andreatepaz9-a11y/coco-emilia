@@ -39,7 +39,7 @@ export const Pages: CollectionConfig<'pages'> = {
   },
   admin: {
     description:
-      'La página "Home" controla la portada del inicio (foto, texto y botón). Los demás textos del inicio se editan en Globales → Inicio e Instagram.',
+      'Páginas de la tienda. Solo la página llamada "Home" es el inicio: su pestaña Hero es la portada y el resto se edita en Globales → Inicio e Instagram. Las demás páginas se arman en la pestaña Content.',
     defaultColumns: ['title', 'slug', 'updatedAt'],
     livePreview: {
       url: ({ data, req }) =>
@@ -62,10 +62,6 @@ export const Pages: CollectionConfig<'pages'> = {
       name: 'title',
       type: 'text',
       required: true,
-      admin: {
-        description:
-          'En la página "Home" solo cuenta la pestaña Hero: es la portada del inicio.',
-      },
     },
     {
       type: 'tabs',
@@ -73,6 +69,17 @@ export const Pages: CollectionConfig<'pages'> = {
         {
           fields: [hero],
           label: 'Hero',
+        },
+        {
+          label: 'Secciones',
+          admin: { condition: (data) => data?.slug === 'home' },
+          fields: [
+            {
+              name: 'accesoSecciones',
+              type: 'ui',
+              admin: { components: { Field: '@/Inicio/AccesoSecciones#AccesoSecciones' } },
+            },
+          ],
         },
         {
           fields: [
@@ -124,6 +131,27 @@ export const Pages: CollectionConfig<'pages'> = {
       type: 'date',
       admin: {
         position: 'sidebar',
+      },
+    },
+    {
+      name: 'mostrarEnMenu',
+      type: 'checkbox',
+      label: 'Mostrar en el menú',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description: 'Agrega un enlace a esta página en el pie de página y en el menú del celular.',
+        condition: (data) => data?.slug !== 'home',
+      },
+    },
+    {
+      name: 'etiquetaMenu',
+      type: 'text',
+      label: 'Nombre en el menú',
+      admin: {
+        position: 'sidebar',
+        description: 'Opcional. Si lo dejas vacío usa el título de la página.',
+        condition: (data) => data?.slug !== 'home' && !!data?.mostrarEnMenu,
       },
     },
     slugField(),
