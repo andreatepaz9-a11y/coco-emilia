@@ -1,4 +1,5 @@
 import { Button, type ButtonProps } from '@/components/ui/button'
+import { enlaceSeguro } from '@/utilities/enlaceSeguro'
 import { cn } from '@/utilities/ui'
 import Link from 'next/link'
 import React from 'react'
@@ -38,7 +39,9 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
       ? `${reference?.relationTo !== 'pages' ? `/${reference?.relationTo}` : ''}/${
           reference.value.slug
         }`
-      : url
+      : type === 'custom'
+        ? enlaceSeguro(url, '')
+        : url
 
   if (!href) return null
 

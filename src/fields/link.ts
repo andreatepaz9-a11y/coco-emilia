@@ -1,3 +1,4 @@
+import { validarEnlace } from '@/utilities/enlaceSeguro'
 import type { Field, GroupField } from 'payload'
 
 import deepMerge from '@/utilities/deepMerge'
@@ -86,6 +87,8 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
       },
       label: 'Custom URL',
       required: true,
+      validate: (value: string | null | undefined) =>
+        value?.trim() ? validarEnlace(value) : 'Escribe un enlace',
     },
   ]
 
