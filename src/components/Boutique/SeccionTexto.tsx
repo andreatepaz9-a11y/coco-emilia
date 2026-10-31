@@ -3,6 +3,7 @@ import React from 'react'
 
 import type { Inicio } from '@/payload-types'
 import { seccionTextoDefaults as d } from '@/Inicio/defaults'
+import { enlaceSeguro } from '@/utilities/enlaceSeguro'
 import { estiloBoton } from '@/utilities/estiloBoton'
 import { getMediaUrl } from '@/utilities/getMediaUrl'
 import { IMAGE_QUALITY } from '@/utilities/imageQuality'
@@ -17,7 +18,7 @@ const text = (value: string | null | undefined, fallback: string) =>
 export const SeccionTexto: React.FC<{ datos: Datos }> = ({ datos }) => {
   const foto = datos.imagen && typeof datos.imagen === 'object' ? datos.imagen : null
   const botonTexto = text(datos.botonTexto, d.botonTexto)
-  const botonEnlace = text(datos.botonEnlace, d.botonEnlace)
+  const botonEnlace = enlaceSeguro(text(datos.botonEnlace, d.botonEnlace))
   const externo = /^https?:\/\//.test(botonEnlace)
   const etiqueta = text(datos.etiqueta, d.etiqueta)
   const texto = text(datos.texto, d.texto)
@@ -41,7 +42,7 @@ export const SeccionTexto: React.FC<{ datos: Datos }> = ({ datos }) => {
           {botonTexto && (
             <a
               className={`mt-8 ${estiloBoton(datos.colorBoton, 'verde')}`}
-              href={botonEnlace || '#'}
+              href={botonEnlace}
               rel={externo ? 'noopener noreferrer' : undefined}
               target={externo ? '_blank' : undefined}
             >

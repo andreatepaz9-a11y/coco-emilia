@@ -1,5 +1,6 @@
 import type { Block, Field, GlobalConfig } from 'payload'
 
+import { validarEnlace } from '@/utilities/enlaceSeguro'
 import { colorBotonField } from '@/utilities/estiloBoton'
 
 import { inicioDefaults as d } from './defaults'
@@ -161,6 +162,7 @@ export const Inicio: GlobalConfig = {
                 },
                 {
                   name: 'botonEnlace',
+                  validate: validarEnlace,
                   type: 'text',
                   label: 'Enlace del botón',
                   defaultValue: d.historia.botonEnlace,

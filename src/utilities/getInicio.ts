@@ -2,6 +2,7 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { cache } from 'react'
 
+import { enlaceSeguro } from '@/utilities/enlaceSeguro'
 import { inicioDefaults } from '@/Inicio/defaults'
 import type { Inicio } from '@/payload-types'
 
@@ -47,7 +48,7 @@ export const getInicio = cache(async () => {
       tituloCursiva: text(doc.historia?.tituloCursiva, d.historia.tituloCursiva),
       texto: text(doc.historia?.texto, d.historia.texto),
       botonTexto: text(doc.historia?.botonTexto, d.historia.botonTexto),
-      botonEnlace: doc.historia?.botonEnlace?.trim() || '',
+      botonEnlace: enlaceSeguro(doc.historia?.botonEnlace, ''),
       colorBoton: doc.historia?.colorBoton,
     },
   }

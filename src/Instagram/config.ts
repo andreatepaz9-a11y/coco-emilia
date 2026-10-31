@@ -1,3 +1,4 @@
+import { validarEnlace } from '@/utilities/enlaceSeguro'
 import { colorBotonField } from '@/utilities/estiloBoton'
 import type { GlobalConfig } from 'payload'
 
@@ -61,6 +62,7 @@ export const Instagram: GlobalConfig = {
         },
         {
           name: 'botonEnlace',
+          validate: validarEnlace,
           type: 'text',
           label: 'Enlace del botón',
           defaultValue: d.botonEnlace,

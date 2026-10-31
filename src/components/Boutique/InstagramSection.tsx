@@ -5,6 +5,7 @@ import { getPayload } from 'payload'
 import React from 'react'
 
 import { instagramDefaults as d } from '@/Inicio/defaults'
+import { enlaceSeguro } from '@/utilities/enlaceSeguro'
 import { estiloBoton } from '@/utilities/estiloBoton'
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '@/utilities/instagram'
 import { IMAGE_QUALITY } from '@/utilities/imageQuality'
@@ -53,7 +54,7 @@ const text = (value: string | null | undefined, fallback: string) =>
 export const InstagramSection: React.FC = async () => {
   const instagram = await getInstagram()
   const tiles = getTiles(instagram)
-  const botonHref = instagram.botonEnlace?.trim() || INSTAGRAM_URL
+  const botonHref = enlaceSeguro(instagram.botonEnlace, INSTAGRAM_URL)
   const count = tiles.length
 
   // Cuántas caben por fila: con pocas fotos se ven más grandes, hasta 3 en tablet y 6 en escritorio
